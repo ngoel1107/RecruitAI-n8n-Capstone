@@ -1,5 +1,5 @@
 {
-  "name": "WF-01 Candidate Registration",
+  "name": "My workflow",
   "nodes": [
     {
       "parameters": {
@@ -30,10 +30,10 @@
       "type": "n8n-nodes-base.googleSheetsTrigger",
       "typeVersion": 1,
       "position": [
-        224,
+        0,
         0
       ],
-      "id": "7da9dfde-58c0-4615-915d-f7c21f4bbcf4",
+      "id": "1d54f3fa-44e6-4564-b052-39eaba279f2d",
       "name": "Google Sheets Trigger",
       "credentials": {
         "googleSheetsTriggerOAuth2Api": {
@@ -44,66 +44,103 @@
     },
     {
       "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.resumeLink.match(/id=([^&]+)/)[1] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "fdd70bc3-5ba8-4197-abda-382a0e9e58e8",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "70KR806AyUw2gohg",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "839e1090-8f8c-478a-829e-8b0e7cb7fbe1",
+              "id": "aeb1d3c2-0cfb-404b-b3eb-09171575758b",
+              "name": "timestamp",
+              "value": "={{ $json.Timestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "59eaada3-bfa4-492b-b8a4-b1d0272952e1",
               "name": "fullName",
-              "value": "={{$json[\"Full Name\"]}}",
+              "value": "={{ $json['Full Name'] }}",
               "type": "string"
             },
             {
-              "id": "b2569d2a-a811-41bd-8ac7-fc9321e9e4f9",
+              "id": "4c8fa31b-e47a-430b-8749-d5a009769b76",
               "name": "email",
-              "value": "={{$json[\"Email Address\"]}}",
+              "value": "={{ $json['Email Address'] }}",
               "type": "string"
             },
             {
-              "id": "0e017532-a138-425f-9964-7a6f44825cfb",
+              "id": "49f31569-32b4-4ce7-8e44-4ed938c4fe3b",
               "name": "phone",
-              "value": "={{$json[\"Phone Number\"]}}",
-              "type": "string"
+              "value": "={{ $json['Phone Number'] }}",
+              "type": "number"
             },
             {
-              "id": "79f65d6a-d7cb-4612-a23e-371cc94607ef",
+              "id": "b16f2d17-6065-4800-84bb-fa92a4ee6c25",
               "name": "position",
-              "value": "={{$json[\"Job Position Applying For\"]}}",
+              "value": "={{ $json['Job Position Applying For'] }}",
               "type": "string"
             },
             {
-              "id": "790d91a3-30f3-407d-8409-d2fd770901b2",
+              "id": "9853a2d1-abb6-4f9d-b4c8-8f949b9bc11c",
               "name": "experience",
               "value": "={{ $json['Years of Experience '] }}",
               "type": "string"
             },
             {
-              "id": "922acb87-a936-463f-aa4f-ae01bec8a084",
+              "id": "f126b58b-876b-4e73-82e7-35b3a5d3ff9a",
               "name": "qualification",
               "value": "={{ $json['Highest Qualification  '] }}",
               "type": "string"
             },
             {
-              "id": "6ab36a9b-1608-42b7-ac7f-6731b0794a18",
+              "id": "20ffa0fa-d987-43c0-b92a-2df25c9bdd9b",
               "name": "skills",
               "value": "={{ $json['Technical Skills  '] }}",
               "type": "string"
             },
             {
-              "id": "55a2d8a6-aa9f-4cf2-909c-39e87f07f9ae",
+              "id": "23b781d3-9bb9-4f3d-8fa9-af6dab2b8c59",
               "name": "motivation",
               "value": "={{ $json['Why do you want to join TechNova Solutions?'] }}",
               "type": "string"
             },
             {
-              "id": "ece267cb-04e6-4589-a0b2-8d14ab632ce7",
+              "id": "9031b259-1446-4dd6-9fd0-a8f03a3442a1",
               "name": "resumeLink",
               "value": "={{ $json['Upload Your Resume'] }}",
               "type": "string"
             },
             {
-              "id": "88b2061f-b91c-49c3-b971-a600dffe02fc",
-              "name": "timestamp",
-              "value": "={{$json[\"Timestamp\"]}}",
+              "id": "26cc5f19-2831-4743-b72b-ec692aaee87e",
+              "name": "candidateId",
+              "value": "={{ $json['Candidate ID'] }}",
+              "type": "string"
+            },
+            {
+              "id": "828ee086-6f70-4557-8176-212062f37e2f",
+              "name": "applicationStatus",
+              "value": "={{ $json['Application Status'] }}",
               "type": "string"
             }
           ]
@@ -113,25 +150,83 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        448,
+        224,
         0
       ],
-      "id": "2eebed81-b21e-479b-8514-6f687b23beff",
+      "id": "076b5e22-9c51-4501-94f3-77b0c2aee804",
       "name": "Edit Fields"
     },
     {
       "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "// Get the current date and time\nconst now = new Date();\n\n// Format date as YYYYMMDD\nconst date =\n    now.getFullYear().toString() +\n    String(now.getMonth() + 1).padStart(2, '0') +\n    String(now.getDate()).padStart(2, '0');\n\n// Format time as HHMMSS\nconst time =\n    String(now.getHours()).padStart(2, '0') +\n    String(now.getMinutes()).padStart(2, '0') +\n    String(now.getSeconds()).padStart(2, '0');\n\n// Create Candidate ID\nconst milliseconds = String(now.getMilliseconds()).padStart(3, \"0\");\nconst candidateId = `CAN-${date}-${time}-${milliseconds}`;\n\n// Add Candidate ID to existing data\nreturn {\n  json: {\n    ...$json,\n    candidateId: candidateId,\n    applicationStatus: \"Application Received\",\n    lastUpdated: now.toISOString()\n  }\n};"
+        "operation": "pdf",
+        "options": {}
       },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
       "position": [
         672,
         0
       ],
-      "id": "212df43a-eb5a-48dc-8ea4-2752fd15ab6c",
-      "name": "Code in JavaScript"
+      "id": "3c1f1606-f70d-4e57-b54d-0d9e45e77160",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b2f973c5-4aaf-42e6-bbc9-e9531d3617f9",
+              "name": "prompt",
+              "value": "=={{\"Analyze the following resume and return ONLY valid JSON.\\n\\nResume:\\n\" +\n$json.text +\n\"\\n\\nReturn exactly this format:\\n{\\n\\\"name\\\":\\\"\\\",\\n\\\"email\\\":\\\"\\\",\\n\\\"phone\\\":\\\"\\\",\\n\\\"education\\\":[],\\n\\\"experience\\\":[],\\n\\\"skills\\\":[],\\n\\\"projects\\\":[],\\n\\\"certifications\\\":[],\\n\\\"matchScore\\\":0,\\n\\\"strengths\\\":[],\\n\\\"weaknesses\\\":[],\\n\\\"recommendation\\\":\\\"\\\"\\n}\"}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        896,
+        0
+      ],
+      "id": "2cf01ce2-a64a-454c-a30f-fe03ad4cb874",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.prompt}}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "20ead56b-ff7c-4703-99e6-c1dbd8ffa88f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        176
+      ],
+      "id": "58de513f-9859-4f5b-adba-6ba9ff630aee",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2i6f6K3GxODZOTbu",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
     },
     {
       "parameters": {
@@ -153,13 +248,19 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Timestamp": "={{$json.timestamp}}",
-            "Candidate ID": "={{$json.candidateId}}",
-            "Application Status": "={{$json.applicationStatus}}",
-            "Last Updated": "={{$json.lastUpdated}}"
+            "Full Name": "={{ JSON.parse($json.output).name }}",
+            "Email Address": "={{ $('Google Sheets Trigger').first().json['Email Address'] }}",
+            "Phone Number": "={{ JSON.parse($json.output).phone }}",
+            "Job Position Applying For": "=",
+            "Years of Experience ": "=",
+            "Technical Skills  ": "={{ JSON.parse($json.output).skills.join(\", \") }}",
+            "Highest Qualification  ": "={{ JSON.parse($json.output).education[0].degree }}",
+            "Resume Analysis": "={{ $json.output }}",
+            "AI Match Score": "={{ JSON.parse($json.output).matchScore }}",
+            "Candidate ID": "="
           },
           "matchingColumns": [
-            "Timestamp"
+            "Email Address"
           ],
           "schema": [
             {
@@ -170,7 +271,7 @@
               "display": true,
               "type": "string",
               "canBeUsedToMatch": true,
-              "removed": false
+              "removed": true
             },
             {
               "id": "Full Name",
@@ -188,7 +289,8 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "Phone Number",
@@ -197,7 +299,8 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "Job Position Applying For",
@@ -260,7 +363,8 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "Application Status",
@@ -372,38 +476,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        848,
+        1424,
         0
       ],
-      "id": "492d00b1-fa97-4df2-93ee-ae3da47e66b7",
+      "id": "f0eed36f-dc72-45f8-be0c-accd039f42f0",
       "name": "Update row in sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "sdLTd8JUdoQM92BF",
           "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sendTo": "={{$json.email}}",
-        "subject": "Application Received | TechNova Solutions",
-        "message": "=<h2>Application Received Successfully</h2>  <p>Dear {{$json.fullName}},</p>  <p>Thank you for applying to <b>TechNova Solutions</b>.</p>  <p>Your application has been received successfully.</p>  <p><b>Candidate ID:</b> {{$json.candidateId}}</p>  <p><b>Status:</b> {{$json.applicationStatus}}</p>  <p> Our recruitment team will review your application carefully. If you are shortlisted, you will receive another email regarding the interview process. </p>  <br>  Regards,<br> <b>HR Team</b><br> TechNova Solutions",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.2,
-      "position": [
-        848,
-        176
-      ],
-      "id": "cf1722fd-1163-4b89-b454-d7ecec99f40d",
-      "name": "Send a message",
-      "webhookId": "637335f0-7948-4750-9cc8-b413daed3c30",
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "nPAWXvZAi5rlucgG",
-          "name": "Gmail account"
         }
       }
     }
@@ -425,47 +506,81 @@
       "main": [
         [
           {
-            "node": "Code in JavaScript",
+            "node": "Download file",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Code in JavaScript": {
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
       "main": [
         [
           {
             "node": "Update row in sheet",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Send a message",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
-    },
-    "Update row in sheet": {
-      "main": [
-        []
-      ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "73b98373-0172-4ab5-b7e9-6e016268e1c6",
+  "versionId": "7f6b2c15-6d06-4c44-a456-561f3cd88de6",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "84027ac33bfaad2338779966004d62976fd9ba9fec0d76bbe246c73cf706d0b4"
   },
   "nodeGroups": [],
-  "id": "4W3JNlCoSKd8c9pa",
+  "id": "Hxcb6rFzwy0sdQBS",
   "tags": []
 }

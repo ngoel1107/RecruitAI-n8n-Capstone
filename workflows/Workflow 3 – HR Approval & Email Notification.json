@@ -1,0 +1,172 @@
+{
+  "name": "Workflow 3 – HR Approval & Email Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1k5p0bXkvtrf_cIaKRl2cp4PaEJ0LdF_HmaB7FjWQyZU",
+          "mode": "list",
+          "cachedResultName": "RecruitAI Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1k5p0bXkvtrf_cIaKRl2cp4PaEJ0LdF_HmaB7FjWQyZU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 345999510,
+          "mode": "list",
+          "cachedResultName": "Candidates",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1k5p0bXkvtrf_cIaKRl2cp4PaEJ0LdF_HmaB7FjWQyZU/edit#gid=345999510"
+        },
+        "event": "rowUpdate",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0f44a4db-1b90-4e12-b132-1df808cdd43b",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "Xe6L3iAkTYkQLAxB",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5c008ae7-2054-4df0-9d21-de7e82d55899",
+              "leftValue": "={{$json[\"HR Decision\"]}}",
+              "rightValue": "Shortlisted",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "1c8685c0-2878-4532-ba56-a2f45d2969fa",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$json[\"Email Address\"]}}",
+        "subject": "Congratulations! You've Been Shortlisted",
+        "message": "=Dear {{$json[\"Full Name\"]}},  Congratulations!  We are pleased to inform you that you have been shortlisted for the next stage of the recruitment process at TechNova Solutions.  Our HR team will contact you soon with further interview details.  Thank you for applying.  Best Regards, HR Team TechNova Solutions",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        -96
+      ],
+      "id": "8d73ba80-4ec8-4694-8773-2bbeabb4058f",
+      "name": "Send a message",
+      "webhookId": "91b8ce70-4f4b-40a2-89cc-79a37222b8e5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "nPAWXvZAi5rlucgG",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$json[\"Email Address\"]}}",
+        "subject": "Application Status",
+        "message": "=Dear {{$json[\"Full Name\"]}},  Thank you for your interest in TechNova Solutions.  After reviewing your application, we regret to inform you that you have not been shortlisted for this position.  We appreciate the time you invested in applying and encourage you to apply for future opportunities.  We wish you all the best.  Regards, HR Team TechNova Solutions",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        96
+      ],
+      "id": "00a44a16-8714-4b29-b5b1-d3231e5f55e5",
+      "name": "Send a message1",
+      "webhookId": "cdc98b8b-994e-4aa1-b450-8c4edc239134",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "nPAWXvZAi5rlucgG",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ff660b46-b9ba-4c8a-ac58-411e5299b088",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "84027ac33bfaad2338779966004d62976fd9ba9fec0d76bbe246c73cf706d0b4"
+  },
+  "nodeGroups": [],
+  "id": "rw5jdG9MRfP7KkuV",
+  "tags": []
+}
